@@ -120,7 +120,23 @@ func (ranker *Ranker) GetResultsString() string {
 	return stringBuilder.String()
 }
 
+// Score integer, text (base64 raw), key used (base64 raw)
+func (ranker *Ranker) GetResultsStringRaw() string {
+	var stringBuilder strings.Builder
+	for _, e := range ranker.rankedStrings {
+		stringBuilder.WriteString(strconv.Itoa(e.score) + ",")
+		stringBuilder.WriteString(e.text + ",")
+		stringBuilder.WriteString(e.keyUsed + "\n")
+	}
+	return stringBuilder.String()
+}
+
 // Prints score integer, text (base64 encoded), key used (base64 encoded)
 func (ranker *Ranker) PrintResults() {
 	fmt.Print(ranker.GetResultsString())
+}
+
+// Prints score integer, text (raw), key used (raw)
+func (ranker *Ranker) PrintResultsRaw() {
+	fmt.Print(ranker.GetResultsStringRaw())
 }
