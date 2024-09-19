@@ -1,8 +1,11 @@
 package plaintextrank
 
 import (
+	"encoding/base64"
 	"fmt"
 	"slices"
+	"strconv"
+	"strings"
 )
 
 type rankedText struct {
@@ -106,11 +109,18 @@ func (ranker *Ranker) SetRankFunc(f func(text string) int) {
 	ranker.rankFunc = f
 }
 
-func (ranker *Ranker) PrintResults() {
+// Score integer, text (base64 encoded), key used (base64 encoded)
+func (ranker *Ranker) GetResultsString() string {
+	var stringBuilder strings.Builder
 	for _, e := range ranker.rankedStrings {
-		fmt.Print("score:", e.score)
-		fmt.Print(", text:", e.text)
-		fmt.Print(", key used:", e.keyUsed)
-		fmt.Println()
+		stringBuilder.WriteString(strconv.Itoa(e.score) + ",")
+		stringBuilder.WriteString(base64.StdEncoding.EncodeToString([]byte(e.text)) + ",")
+		stringBuilder.WriteString(base64.StdEncoding.EncodeToString([]byte(e.keyUsed)) + "\n")
 	}
+	return stringBuilder.String()
+}
+
+// Prints score integer, text (base64 encoded), key used (base64 encoded)
+func (ranker *Ranker) PrintResults() {
+	fmt.Print(ranker.GetResultsString())
 }
